@@ -41,8 +41,16 @@ function checkUsernameFree(req, res, next) {
     "message": "Invalid credentials"
   }
 */
-function checkUsernameExists() {
-
+function checkUsernameExists(req, res, next) {
+  if (!req.body.username) {
+    res.status(401).json({ "message": "Invalid credentials" })
+  } else if (req.body.username === '') {
+    res.status(401).json({ "message": "Invalid credentials" })
+  } else if (typeof req.body.username !== "string") {
+    res.status(401).json({ "message": "Invalid credentials" })
+  } else {
+    next()
+  }
 }
 
 /*
@@ -53,7 +61,12 @@ function checkUsernameExists() {
     "message": "Password must be longer than 3 chars"
   }
 */
-function checkPasswordLength() {
+function checkPasswordLength(req, res, next) {
+  if (!req.body.password || req.body.password.length <= 3 || req.body.password === "") {
+    res.status(422).json({ "message": "Password must be longer than 3 chars" })
+  } else {
+    next()
+  }
 
 }
 
