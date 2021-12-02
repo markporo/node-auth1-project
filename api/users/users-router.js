@@ -36,10 +36,39 @@ router.get('/', (req, res) => {
   usersModel.find()
     .then(users => {
       //if(RESTRICTED -not a client) {res.status(401).json("message": "You shall not pass!")} else {
-      res.status(201).json(users)
+      res.status(200).json(users)
     })
     .catch(() => {
       res.status(500).json({ message: "Users could not be retrieved by Database." })
+    })
+})
+
+// get  user by id route
+router.get('/:id', (req, res) => {
+  usersModel.findById(req.params.id)
+    .then(user => {
+      console.log(user, "from get by id route")
+      if (user) {
+        res.status(200).json(user)
+      } else {
+        res.status(404).json({ message: `user with id ${req.params.id} is not found` })
+      }
+    })
+    .catch(() => {
+      res.status(500).json({ message: "The User with that Id could not be found." })
+    })
+})
+
+// add user
+router.post('/', (req, res) => {
+  console.log(req.body, "req.body from post router")
+  usersModel.add(req.body)
+    .then(newUser => {
+      console.log(newUser, "newUser from post router")
+      res.status(201).json(newUser)
+    })
+    .catch(() => {
+      res.status(500).json({ message: "The User could not be added to the DB." })
     })
 })
 

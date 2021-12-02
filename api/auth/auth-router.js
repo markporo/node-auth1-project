@@ -1,5 +1,7 @@
 // Require `checkUsernameFree`, `checkUsernameExists` and `checkPasswordLength`
 // middleware functions from `auth-middleware.js`. You will need them here!
+const { checkPasswordLength, checkUsernameExists, checkUsernameFree } = require('./auth-middleware')
+
 
 
 /**
@@ -59,5 +61,6 @@
   }
  */
 
- 
+
 // Don't forget to add the router to the `exports` object so it can be required in other modules
+module.exports = {}
