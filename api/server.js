@@ -16,6 +16,7 @@ const express = require("express")
 
 //get access to the router file
 const usersRouter = require('./users/users-router')
+const authRouter = require('./auth/auth-router')
 
 // third party middleware required
 const helmet = require('helmet')
@@ -36,6 +37,8 @@ server.use(morgan('dev'))
 // connect the url and endpoints of the router file to this
 // server file
 server.use('/api/users', usersRouter) // 1st param = url route, 2nd param = router name that was required above
+
+server.use('/api/auth', authRouter) // 1st param = url route, 2nd param = router name that was required above
 
 
 // endpoints that fare kind of  a catch all endpoint

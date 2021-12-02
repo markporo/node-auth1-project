@@ -1,6 +1,7 @@
 // require express
 const express = require('express')
 
+
 // Require the `restricted` middleware from `auth-middleware.js`. You will need it here!
 const { checkPasswordLength, checkUsernameExists, checkUsernameFree, restricted } = require('../auth/auth-middleware')
 
@@ -43,6 +44,7 @@ router.get('/', (req, res) => {
     })
 })
 
+
 // get  user by id route
 router.get('/:id', (req, res) => {
   usersModel.findById(req.params.id)
@@ -59,12 +61,11 @@ router.get('/:id', (req, res) => {
     })
 })
 
-// add user
+// add user  ---change route to /api/auth/register
 router.post('/', checkUsernameExists, checkUsernameFree, checkPasswordLength, (req, res) => {
-  console.log(req.body, "req.body from post router")
+
   usersModel.add(req.body)
     .then(newUser => {
-      console.log(newUser, "newUser from post router")
       res.status(201).json(newUser)
     })
     .catch(() => {
