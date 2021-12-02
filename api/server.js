@@ -14,6 +14,9 @@
 // require express
 const express = require("express")
 
+//require express sessions for keeping users logged in via cookies
+const session = require('express-session')
+
 //get access to the router file
 const usersRouter = require('./users/users-router')
 const authRouter = require('./auth/auth-router')
@@ -26,12 +29,29 @@ const cors = require('cors')
 // invoke express as a server
 const server = express();
 
+//sessionConfig for passing into sessions
+const sessionConfig = {
+  name: 'chocolatechip', // default name in cookie is sid // this is name cookies uses for session
+  secret: 'keep it secret, keep it safe!',
+  cookie: {
+    maxAge: 1000 * 60 * 30, // 30 minutes
+    secure: false, // should be true in production
+    httpOnly: true, // should always be true 
+  },
+  resave: false,
+  saveUninitialized: false, // GDPR laws against setting cookies automatically -- change dynamically based on user response
+
+}
+
+
 // use the middleware by the server
 server.use(helmet());
 server.use(express.json());
 server.use(cors());
 server.use(morgan('dev'))
 
+//use sessions
+server.use(session(sessionConfig))
 
 
 // connect the url and endpoints of the router file to this

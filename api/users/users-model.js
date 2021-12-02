@@ -6,8 +6,8 @@ const db = require('../../data/db-config')
 function find() {
 
   return db('users as us')
-    .select('us.user_id', 'us.username')
-    .orderBy('us.user_id', 'asc')
+  // .select('us.user_id', 'us.username')
+  // .orderBy('us.user_id', 'asc')
 }
 
 /**
