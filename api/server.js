@@ -1,7 +1,3 @@
-const express = require("express");
-const helmet = require("helmet");
-const cors = require("cors");
-
 /**
   Do what needs to be done to support sessions with the `express-session` package!
   To respect users' privacy, do NOT send them a cookie unless they log in.
@@ -15,12 +11,34 @@ const cors = require("cors");
   or you can use a session store like `connect-session-knex`.
  */
 
+// require express
+const express = require("express")
+
+//get access to the router file
+const usersRouter = require('./users/users-router')
+
+// third party middleware required
+const helmet = require('helmet')
+const morgan = require('morgan')
+const cors = require('cors')
+
+// invoke express as a server
 const server = express();
 
+// use the middleware by the server
 server.use(helmet());
 server.use(express.json());
 server.use(cors());
+server.use(morgan('dev'))
 
+
+
+// connect the url and endpoints of the router file to this
+// server file
+server.use('/api/users', usersRouter) // 1st param = url route, 2nd param = router name that was required above
+
+
+// endpoints that fare kind of  a catch all endpoint
 server.get("/", (req, res) => {
   res.json({ api: "up" });
 });
