@@ -17,6 +17,13 @@ const express = require("express")
 //require express sessions for keeping users logged in via cookies
 const session = require('express-session')
 
+// connect-session-knex --this creates a session
+//invokes session
+const Store = require('connect-session-knex')(session)
+
+//require dbconfig
+const knex = require('../data/db-config')
+
 //get access to the router file
 const usersRouter = require('./users/users-router')
 const authRouter = require('./auth/auth-router')
@@ -33,25 +40,31 @@ const server = express();
 const sessionConfig = {
   name: 'chocolatechip', // default name in cookie is sid // this is name cookies uses for session
   secret: 'keep it secret, keep it safe!',
+  saveUninitialized: false, // GDPR laws against setting cookies automatically -- change dynamically based on user response
+  resave: false,
+  Store: new Store({
+    knex,
+    createtable: true,
+    clearInterval: 1000 * 60 * 10,
+    tablename: 'sessions',
+    sidfieldname: 'sid',
+  }),
   cookie: {
-    maxAge: 1000 * 60 * 30, // 30 minutes
+    maxAge: 1000 * 60 * 10, // 10 minutes
     secure: false, // should be true in production
     httpOnly: true, // should always be true 
+    //sameSite: 'none', //only works over https
   },
-  resave: false,
-  saveUninitialized: false, // GDPR laws against setting cookies automatically -- change dynamically based on user response
-
 }
 
+//use sessions
+server.use(session(sessionConfig))
 
 // use the middleware by the server
 server.use(helmet());
 server.use(express.json());
 server.use(cors());
 server.use(morgan('dev'))
-
-//use sessions
-server.use(session(sessionConfig))
 
 
 // connect the url and endpoints of the router file to this

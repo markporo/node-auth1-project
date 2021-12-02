@@ -44,11 +44,11 @@ router.post('/register', checkUsernameExists, checkUsernameFree, checkPasswordLe
   // hash password!
   const hash = bcrypt.hashSync(req.body.password, 14)
   //assign hash of password to the user's password
-  req.body.password = hash;
+  //req.body.password = hash;
 
-  usersModel.add(req.body)
+  usersModel.add({ username: req.body.username, password: hash })
     .then(newUser => {
-      res.status(200).json(newUser)
+      res.status(201).json(newUser)
     })
     .catch(() => {
       res.status(500).json({ message: "The User could not be added to the DB." })
@@ -71,7 +71,7 @@ router.post('/register', checkUsernameExists, checkUsernameFree, checkPasswordLe
     "message": "Invalid credentials"
   }
  */
-router.post('/login', (req, res) => {
+router.post('/login', checkUsernameExists, (req, res) => {
   let { username, password } = req.body;
 
   usersModel.findBy({ username })
@@ -79,7 +79,8 @@ router.post('/login', (req, res) => {
     .then(user => {
       // check that passwords match
       if (user && bcrypt.compareSync(password, user.password)) {
-
+        //make is so that the cookie is set on the client
+        //make it so server stores a session with a session id
         req.session.user = user;
 
         res.status(200).json({ message: `Welcome ${user.username}!` });
