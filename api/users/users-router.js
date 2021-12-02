@@ -33,7 +33,7 @@ const router = express.Router()
     "message": "You shall not pass!"
   }
  */
-router.get('/', (req, res) => {
+router.get('/', restricted, (req, res) => {
   usersModel.find()
     .then(users => {
       //if(RESTRICTED -not a client) {res.status(401).json("message": "You shall not pass!")} else {
