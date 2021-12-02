@@ -60,7 +60,7 @@ router.get('/:id', (req, res) => {
 })
 
 // add user
-router.post('/', (req, res) => {
+router.post('/', checkUsernameFree, (req, res) => {
   console.log(req.body, "req.body from post router")
   usersModel.add(req.body)
     .then(newUser => {

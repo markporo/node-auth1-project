@@ -19,8 +19,18 @@ function restricted() {
     "message": "Username taken"
   }
 */
-function checkUsernameFree() {
+function checkUsernameFree(req, res, next) {
+  const filter = { username: req.body.username }
 
+  usersModel
+    .findBy(filter)
+    .then(nameFound => {
+      if (nameFound[0]) {
+        res.status(422).json({ "message": "Username taken" })
+      } else {
+        next()
+      }
+    })
 }
 
 /*
